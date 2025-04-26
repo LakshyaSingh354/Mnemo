@@ -67,7 +67,7 @@ class VectorMemoryStore:
         max_sim = max(sims)
         novelty = 1 - min(max_sim, threshold)
         return round(novelty, 3)
-    
+
     def compute_recency_score(self, entry_time, current_time, half_life=600):
         """
         Returns a score between 0 and 1 based on how recent the memory is.
@@ -84,7 +84,7 @@ class VectorMemoryStore:
                 return True
         return False
 
-    def add_message(self, message: str, tags: List[str] = [], source: str = "chat"):
+    def add_message(self, message: str, source: str = "chat"):
         embedding = self.embedder.encode([message])[0]
 
         if self.is_duplicate(new_embedding=embedding):
@@ -93,6 +93,8 @@ class VectorMemoryStore:
 
         importance = self.score_importance(message)
         novelty = self.score_novelty(embedding, self.embeddings)
+
+        tags = ['dummy_tag']
 
         entry = MemoryEntry(
             content=message,
